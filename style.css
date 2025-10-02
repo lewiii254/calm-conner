@@ -48,38 +48,67 @@ nav button.active {
 }
 main section {
   max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 30px auto;
+  padding: 30px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
   opacity: 0;
+  transform: translateY(20px);
 }
 main section.active {
   opacity: 1;
+  transform: translateY(0);
 }
 
 /* Breathing Section */
 #breathing {
   text-align: center;
+  padding: 20px 0;
 }
 #circle {
   width: 100px;
   height: 100px;
   background-color: #4a90e2;
   border-radius: 50%;
-  margin: 20px auto;
+  margin: 30px auto;
   transition: transform 1s ease;
 }
 
 /* Form elements */
 #journal-entry, #chat-input, #message, #email, #name {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 12px;
+  margin: 15px 0;
   border: 1px solid #ddd;
   border-radius: 5px;
+  font-family: inherit;
+  font-size: 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#journal-entry:focus, #chat-input:focus, #message:focus, #email:focus, #name:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Loading animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loading::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
 }
 button {
   padding: 10px 20px;
@@ -88,10 +117,21 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background-color: #3a7bc8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+}
+button:active {
+  transform: translateY(0);
 }
 button:disabled {
   background-color: #a3bffa;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 #chat-window {
   height: 200px;
@@ -103,12 +143,26 @@ button:disabled {
 }
 
 /* Headings & text */
-h1, h2 {
+h1 {
   text-align: center;
   color: #2a5b84;
+  font-size: 2.5em;
+  margin: 20px 0;
+}
+h2 {
+  text-align: center;
+  color: #2a5b84;
+  font-size: 2em;
+  margin: 20px 0;
+}
+h3 {
+  color: #2a5b84;
+  font-size: 1.5em;
+  margin: 20px 0;
 }
 p {
-  line-height: 1.6;
+  line-height: 1.8;
+  margin: 15px 0;
 }
 
 /* Home Page Layout */
@@ -212,17 +266,38 @@ p {
   border-radius: 8px;
 }
 .journal-entry {
-  background: #f7f9fc;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: linear-gradient(135deg, #f7f9fc 0%, #ffffff 100%);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border-left: 4px solid #4a90e2;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: slideIn 0.3s ease;
+}
+.journal-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 .journal-entry p {
-  margin: 5px 0;
+  margin: 8px 0;
+  font-size: 15px;
 }
 .journal-entry strong {
   color: #4a90e2;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 10px;
 }
 .journal-buttons {
   margin-top: 10px;
@@ -274,6 +349,9 @@ p {
   text-align: center;
   padding: 20px;
 }
+.mood-buttons {
+  margin: 20px 0;
+}
 #mood-buttons button {
   border: none;
   padding: 12px 20px;
@@ -302,11 +380,13 @@ p {
   font-weight: bold;
   margin-top: 15px;
   font-size: 18px;
+  transition: opacity 0.3s ease;
 }
 #mood-quote {
   font-style: italic;
   margin-top: 10px;
   color: #555;
+  transition: opacity 0.3s ease;
 }
 #mood-history {
   list-style: none;
@@ -339,4 +419,119 @@ p {
   padding: 12px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  nav button {
+    padding: 8px 12px;
+    margin: 3px;
+    font-size: 14px;
+  }
+  
+  h1 {
+    font-size: 2em;
+    margin: 15px 0;
+  }
+  
+  h2 {
+    font-size: 1.6em;
+    margin: 15px 0;
+  }
+  
+  h3 {
+    font-size: 1.3em;
+  }
+  
+  main section {
+    max-width: 100%;
+    margin: 15px;
+    padding: 20px;
+  }
+  
+  .home-content {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .home-box {
+    min-width: 100%;
+    padding: 12px;
+  }
+  
+  .home-img {
+    width: 100px;
+    height: 100px;
+    margin-right: 12px;
+  }
+  
+  .about-content {
+    flex-direction: column;
+  }
+  
+  .about-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+  }
+  
+  #journal {
+    max-width: 100%;
+    margin: 15px;
+    padding: 15px;
+  }
+  
+  .charts canvas {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 10px auto;
+  }
+  
+  #journal-entry, #chat-input, #message, #email, #name {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  button {
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    margin-bottom: 15px;
+  }
+  
+  nav button {
+    padding: 6px 10px;
+    margin: 2px;
+    font-size: 12px;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+  }
+  
+  h2 {
+    font-size: 1.4em;
+  }
+  
+  main section {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .home-img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .home-text h3 {
+    font-size: 1.1em;
+  }
+  
+  .home-text p {
+    font-size: 13px;
+  }
 }
