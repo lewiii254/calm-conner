@@ -1,0 +1,144 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calm Corner 🌿</title>
+    
+       <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</head>
+<body>
+    <h1>Calm Corner 🌿</h1>
+    <nav>
+        <button onclick="showSection('home', this)" class="active">Home</button>
+        <button onclick="showSection('about', this)">About</button>
+        <button onclick="showSection('breathing', this)">Breathing</button>
+        <button onclick="showSection('quotes', this)">Quotes</button>
+        <button onclick="showSection('journal', this)">Journal</button>
+        <button onclick="showSection('mood', this)">Mood</button>
+        <button onclick="showSection('contact', this)">Contact</button>
+        <button onclick="showSection('calm-nature', this)">Calm Nature</button>
+        <button onclick="showSection('chatbot', this)">Chatbot</button>
+    </nav>
+    <main>
+          
+<section id="home" class="active">
+    <h2>Welcome to Calm Corner 🌸</h2>
+    <p>This is your personal mindfulness companion. Take a deep breath, write your thoughts, track your mood, and read uplifting quotes.</p>
+    
+    <div class="home-content">
+        <div class="home-box">
+            <img src="nature.png" alt="Relaxing nature" class="home-img">
+            <div class="home-text">
+                <h3>Relax Your Mind</h3>
+                <p>Take a moment to pause and let your mind rest. Mindfulness starts with a deep breath and a calm heart.</p>
+            </div>
+        </div>
+        <div class="home-box">
+            <img src="relax.png" alt="Peaceful moment" class="home-img">
+            <div class="home-text">
+                <h3>Find Inner Peace</h3>
+                <p>Connect with your inner self and embrace positivity. Let Calm Corner guide you toward balance and peace.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about">
+    <h2>About Calm Corner</h2>
+    <div class="about-content">
+        <img src="images/about.jpg" alt="About Calm Corner" class="about-img">
+        <div class="about-text">
+            <p>
+                Calm Corner 🌿 is your personal mindfulness companion, designed to bring peace and balance to your daily life.  
+                Whether you are practicing breathing exercises, journaling your thoughts, tracking your mood, or simply enjoying inspirational quotes, 
+                our mission is to help you build a calm, mindful routine.
+            </p>
+            <p>
+                Take a journey toward mindfulness — explore, reflect, and embrace positivity with Calm Corner.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+   <section id="breathing">
+            <h2>Breathing Exercise</h2>
+            <div id="circle"></div>
+            <p id="breath-text">Press Start</p>
+            <button onclick="startBreathing()">Start</button>
+            <button onclick="stopBreathing()">Stop</button>
+        </section>
+        <section id="quotes">
+            <h2>Inspirational Quote</h2>
+            <p id="quote">Loading quote...</p>
+            <button onclick="getQuote()">New Quote</button>
+        </section>
+
+<section id="journal">
+    <h2>Journal</h2>
+    <p><h4>NOTHING IS GOOD LIKE KEEPING A PROGRESS OF YOUR DAILY PROGRESS</h4></p>
+    <p id="journal-motivation" class="journal-motivation"></p>
+    
+    <textarea id="journal-entry" rows="5" placeholder="Write your thoughts..."></textarea>
+    <button onclick="saveJournal()">Save Entry</button>
+
+    <h3 onclick="toggleJournalList()" class="journal-toggle">📖 View Past Entries</h3>
+    <div id="journal-list" class="hidden"></div>
+</section>
+
+<section id="mood">
+    <h2>Track Your Mood</h2>
+    <div class="mood-buttons">
+        <button onclick="setMood('Happy')">😊 Happy</button>
+        <button onclick="setMood('Calm')">😌 Calm</button>
+        <button onclick="setMood('Sad')">😢 Sad</button>
+    </div>
+
+    <p id="mood-log">No mood set yet 🌸</p>
+    <p id="mood-quote"></p>
+
+    <h3>Past Mood History</h3>
+    <ul id="mood-history"></ul>
+    <button onclick="clearMoods()">🗑️ Clear History</button>
+
+    <h3>Mood Insights</h3>
+    <p id="mood-insights"></p>
+<h3>Mood Charts</h3>
+<div class="charts">
+    <canvas id="moodPieChart" width="400" height="200"></canvas><br>
+    <canvas id="moodLineChart" width="400" height="200"></canvas>
+</div>
+
+</section>
+
+
+
+
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <form id="contact-form">
+                <input id="name" type="text" placeholder="Your Name" required>
+                <input id="email" type="email" placeholder="Your Email" required>
+                <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+        <section id="calm-nature">
+            <h2>Calm Nature</h2>
+            <p>Immerse yourself in the soothing sounds and visuals of nature. This section is a placeholder for nature-inspired content, such as calming images, sounds, or videos, to enhance your mindfulness experience.</p>
+        </section>
+        <section id="chatbot">
+            <h2>Chatbot</h2>
+            <div id="chat-window"></div>
+            <input id="chat-input" type="text" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
