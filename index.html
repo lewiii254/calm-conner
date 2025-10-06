@@ -74,8 +74,10 @@
         </section>
         <section id="quotes">
             <h2>Inspirational Quote</h2>
-            <p id="quote">Loading quote...</p>
-            <button onclick="getQuote()">New Quote</button>
+            <div class="quote-container">
+                <p id="quote">Loading quote...</p>
+            </div>
+            <button onclick="getQuote()">✨ New Quote</button>
         </section>
 
 <section id="journal">
@@ -92,6 +94,26 @@
 
 <section id="mood">
     <h2>Track Your Mood</h2>
+    
+    <!-- Mood Statistics Dashboard -->
+    <div class="mood-stats">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-label">Total Entries</div>
+            <div class="stat-value" id="total-moods">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-label">Current Streak</div>
+            <div class="stat-value" id="mood-streak">0 days</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-label">Top Mood</div>
+            <div class="stat-value" id="top-mood">-</div>
+        </div>
+    </div>
+    
     <div class="mood-buttons">
         <button onclick="setMood('Happy')">😊 Happy</button>
         <button onclick="setMood('Calm')">😌 Calm</button>
@@ -109,7 +131,7 @@
     <p id="mood-insights"></p>
 <h3>Mood Charts</h3>
 <div class="charts">
-    <canvas id="moodPieChart" width="400" height="200"></canvas><br>
+    <canvas id="moodPieChart" width="400" height="200"></canvas>
     <canvas id="moodLineChart" width="400" height="200"></canvas>
 </div>
 

@@ -226,6 +226,72 @@ function updateMoodInsights() {
     let topMood = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
     let emoji = topMood === "Happy" ? "😊" : topMood === "Calm" ? "😌" : "😢";
     insightsBox.textContent = `Most frequent mood: ${emoji} ${topMood} (${counts[topMood]} times)`;
+    
+    // Update statistics dashboard
+    updateMoodStats();
+}
+
+function updateMoodStats() {
+    let moods = JSON.parse(localStorage.getItem("moods")) || [];
+    
+    // Total entries
+    document.getElementById("total-moods").textContent = moods.length;
+    
+    // Calculate streak
+    let streak = calculateMoodStreak(moods);
+    document.getElementById("mood-streak").textContent = streak + " days";
+    
+    // Top mood
+    if (moods.length > 0) {
+        let counts = { Happy: 0, Calm: 0, Sad: 0 };
+        moods.forEach(m => counts[m.mood]++);
+        let topMood = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+        let emoji = topMood === "Happy" ? "😊" : topMood === "Calm" ? "😌" : "😢";
+        document.getElementById("top-mood").textContent = emoji + " " + topMood;
+    } else {
+        document.getElementById("top-mood").textContent = "-";
+    }
+}
+
+function calculateMoodStreak(moods) {
+    if (moods.length === 0) return 0;
+    
+    let streak = 1;
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Check if there's an entry today
+    let lastMood = moods[moods.length - 1];
+    let lastDate = new Date(lastMood.date);
+    lastDate.setHours(0, 0, 0, 0);
+    
+    if (lastDate.getTime() !== today.getTime()) {
+        // Check if it was yesterday
+        let yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (lastDate.getTime() === yesterday.getTime()) {
+            // Continue counting streak
+        } else {
+            return 0; // Streak broken
+        }
+    }
+    
+    // Count consecutive days backwards
+    for (let i = moods.length - 2; i >= 0; i--) {
+        let currentDate = new Date(moods[i].date);
+        currentDate.setHours(0, 0, 0, 0);
+        let nextDate = new Date(moods[i + 1].date);
+        nextDate.setHours(0, 0, 0, 0);
+        
+        let diffDays = Math.floor((nextDate - currentDate) / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+            streak++;
+        } else if (diffDays > 1) {
+            break;
+        }
+    }
+    
+    return streak;
 }
 
 function clearMoods() {
