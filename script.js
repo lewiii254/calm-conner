@@ -58,12 +58,31 @@ function saveJournal() {
     const entry = document.getElementById("journal-entry").value;
     if (!entry.trim()) return alert("Please write something first.");
 
+    // Show saving feedback
+    const saveBtn = event.target;
+    const originalText = saveBtn.textContent;
+    saveBtn.classList.add('loading');
+    saveBtn.textContent = "Saving";
+    saveBtn.disabled = true;
+
     let journal = JSON.parse(localStorage.getItem("journal")) || [];
     journal.push({ text: entry, date: new Date().toLocaleString() });
     localStorage.setItem("journal", JSON.stringify(journal));
 
-    document.getElementById("journal-entry").value = "";
-    displayJournal();
+    // Simulate async save with animation
+    setTimeout(() => {
+        document.getElementById("journal-entry").value = "";
+        displayJournal();
+        saveBtn.classList.remove('loading');
+        saveBtn.textContent = "✓ Saved!";
+        saveBtn.style.backgroundColor = "#6BCB77";
+        
+        setTimeout(() => {
+            saveBtn.textContent = originalText;
+            saveBtn.style.backgroundColor = "";
+            saveBtn.disabled = false;
+        }, 1500);
+    }, 500);
 }
 
 function displayJournal() {
@@ -153,8 +172,19 @@ function setMood(mood) {
                      mood === "Calm" ? "Stay present and enjoy the moment. 🌿" :
                      "It's okay to feel sad. This too shall pass. 💙";
 
-    document.getElementById("mood-log").innerHTML = `<span style="font-size:1.5em">${emoji}</span> You are feeling: <strong style="color:${color}">${mood}</strong>`;
-    document.getElementById("mood-quote").textContent = suggestion;
+    const moodLog = document.getElementById("mood-log");
+    const moodQuote = document.getElementById("mood-quote");
+    
+    // Add animation feedback
+    moodLog.style.opacity = "0";
+    moodQuote.style.opacity = "0";
+    
+    setTimeout(() => {
+        moodLog.innerHTML = `<span style="font-size:1.5em">${emoji}</span> You are feeling: <strong style="color:${color}">${mood}</strong>`;
+        moodQuote.textContent = suggestion;
+        moodLog.style.opacity = "1";
+        moodQuote.style.opacity = "1";
+    }, 200);
 
     let moods = JSON.parse(localStorage.getItem("moods")) || [];
     moods.push({ mood, emoji, color, date: new Date().toLocaleString() });
@@ -219,18 +249,59 @@ function updateMoodCharts() {
     let counts = { Happy: 0, Calm: 0, Sad: 0 };
     moods.forEach(m => counts[m.mood]++);
 
-    // Pie Chart
+    // Pie Chart with enhanced colors and tooltips
     if (moodPieChart) moodPieChart.destroy();
     const pieCtx = document.getElementById("moodPieChart").getContext("2d");
     moodPieChart = new Chart(pieCtx, {
         type: "pie",
         data: {
             labels: ["Happy 😊", "Calm 😌", "Sad 😢"],
-            datasets: [{ data: [counts.Happy, counts.Calm, counts.Sad], backgroundColor: ["#FFD93D", "#6BCB77", "#4D96FF"] }]
+            datasets: [{ 
+                data: [counts.Happy, counts.Calm, counts.Sad], 
+                backgroundColor: [
+                    "rgba(255, 217, 61, 0.9)",   // More vivid Happy yellow
+                    "rgba(107, 203, 119, 0.9)",   // More vivid Calm green
+                    "rgba(77, 150, 255, 0.9)"     // More vivid Sad blue
+                ],
+                borderColor: [
+                    "rgba(255, 217, 61, 1)",
+                    "rgba(107, 203, 119, 1)",
+                    "rgba(77, 150, 255, 1)"
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 },
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.parsed || 0;
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            let percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        font: { size: 12 },
+                        padding: 10
+                    }
+                }
+            }
         }
     });
 
-    // Line Chart
+    // Line Chart with enhanced colors and tooltips
     if (moodLineChart) moodLineChart.destroy();
     const lineCtx = document.getElementById("moodLineChart").getContext("2d");
     moodLineChart = new Chart(lineCtx, {
@@ -240,17 +311,60 @@ function updateMoodCharts() {
             datasets: [{
                 label: "Mood Over Time",
                 data: moods.map(m => m.mood === "Happy" ? 3 : m.mood === "Calm" ? 2 : 1),
-                borderColor: "#4D96FF",
-                fill: false,
-                tension: 0.3
+                borderColor: "rgba(77, 150, 255, 1)",
+                backgroundColor: "rgba(77, 150, 255, 0.1)",
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointBackgroundColor: moods.map(m => 
+                    m.mood === "Happy" ? "rgba(255, 217, 61, 1)" : 
+                    m.mood === "Calm" ? "rgba(107, 203, 119, 1)" : 
+                    "rgba(77, 150, 255, 1)"
+                ),
+                pointBorderColor: "#fff",
+                pointBorderWidth: 2
             }]
         },
         options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 },
+                    callbacks: {
+                        label: function(context) {
+                            let value = context.parsed.y;
+                            let moodText = value === 1 ? "😢 Sad" : value === 2 ? "😌 Calm" : "😊 Happy";
+                            return `Mood: ${moodText}`;
+                        }
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        font: { size: 12 },
+                        padding: 10
+                    }
+                }
+            },
             scales: {
                 y: {
                     min: 0, max: 4, stepSize: 1,
                     ticks: {
                         callback: v => v === 1 ? "😢 Sad" : v === 2 ? "😌 Calm" : v === 3 ? "😊 Happy" : ""
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
                     }
                 }
             }
@@ -261,8 +375,28 @@ function updateMoodCharts() {
 // ---------------------- Contact Form ----------------------
 document.getElementById("contact-form").addEventListener("submit", e => {
     e.preventDefault();
-    alert("Thank you for reaching out! We'll get back to you soon. 💌");
-    e.target.reset();
+    
+    // Show submitting feedback
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.classList.add('loading');
+    submitBtn.textContent = "Sending";
+    submitBtn.disabled = true;
+    
+    // Simulate async submission
+    setTimeout(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = "✓ Sent!";
+        submitBtn.style.backgroundColor = "#6BCB77";
+        
+        setTimeout(() => {
+            alert("Thank you for reaching out! We'll get back to you soon. 💌");
+            e.target.reset();
+            submitBtn.textContent = originalText;
+            submitBtn.style.backgroundColor = "";
+            submitBtn.disabled = false;
+        }, 1000);
+    }, 500);
 });
 
 // ---------------------- Chatbot ----------------------
@@ -293,4 +427,3 @@ window.addEventListener("DOMContentLoaded", () => {
     updateMoodInsights();
     updateMoodCharts();
 });
-WINDOW
